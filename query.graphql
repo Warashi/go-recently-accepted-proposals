@@ -8,9 +8,10 @@ query ($limit: Int!) {
     ) {
       edges {
         node {
+          title
           url
           number
-          timelineItems(last: 3, itemTypes: [LABELED_EVENT]) {
+          timelineItems(last: 10, itemTypes: [LABELED_EVENT]) {
             edges {
               node {
                 __typename
