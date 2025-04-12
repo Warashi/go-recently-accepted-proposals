@@ -1,0 +1,30 @@
+query ($limit: Int!) {
+  repository(owner: "golang", name: "go") {
+    issues(
+      labels: ["Proposal-Accepted"]
+      states: [OPEN]
+      first: $limit
+      orderBy: {field: UPDATED_AT, direction: DESC}
+    ) {
+      edges {
+        node {
+          url
+          number
+          timelineItems(last: 3, itemTypes: [LABELED_EVENT]) {
+            edges {
+              node {
+                __typename
+                ... on LabeledEvent {
+                  createdAt
+                  label {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
