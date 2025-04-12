@@ -4,11 +4,12 @@
 LIMIT ?= 100
 
 .PHONY: all
-all: atom.xml
+all: dist/atom.xml
 
 issues.json: query.graphql
 	mkdir -p src
 	gh api graphql -f query="$$(cat $<)" -F limit=$(LIMIT) > $@
 
-atom.xml: issues.json
+dist/atom.xml: issues.json
+	mkdir -p dist
 	go run . < $< > $@
