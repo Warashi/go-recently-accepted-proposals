@@ -39,6 +39,7 @@ type QueryResult struct {
 						Title         string `json:"title"`
 						URL           string `json:"url"`
 						Number        int    `json:"number"`
+						BodyText      string `json:"bodyText"`
 						TimelineItems struct {
 							Edges []struct {
 								Node struct {

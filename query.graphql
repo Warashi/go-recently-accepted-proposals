@@ -11,6 +11,7 @@ query ($limit: Int!) {
           title
           url
           number
+          bodyText
           timelineItems(last: 10, itemTypes: [LABELED_EVENT]) {
             edges {
               node {

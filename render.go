@@ -18,9 +18,9 @@ func renderATOM(dst io.Writer, queryResult QueryResult) error {
 
 	for i, edge := range queryResult.Data.Repository.Issues.Edges {
 		f.Items = append(f.Items, &feeds.Item{
-			Title:       edge.Node.Title,
+			Title:       edge.Node.Title + " #" + strconv.Itoa(edge.Node.Number),
 			Link:        &feeds.Link{Href: edge.Node.URL},
-			Description: edge.Node.Title + " #" + strconv.Itoa(edge.Node.Number),
+			Description: edge.Node.BodyText,
 			Created:     queryResult.acceptedAt(i),
 		})
 	}
