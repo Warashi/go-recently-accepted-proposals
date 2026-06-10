@@ -7,11 +7,6 @@ on:
     - cron: '5 * * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -22,6 +17,8 @@ defaults:
 
 jobs:
   build:
+    permissions:
+      contents: read
     runs-on: ubuntu-slim
     steps:
       - name: Checkout
@@ -47,6 +44,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-tokens: write
     runs-on: ubuntu-slim
     needs: build
     steps:
@@ -55,6 +55,8 @@ jobs:
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
   update-last-updated:
+    permissions:
+      contents: write
     runs-on: ubuntu-slim
     needs: deploy
     steps:
