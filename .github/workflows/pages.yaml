@@ -46,7 +46,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     permissions:
       pages: write
-      id-tokens: write
+      id-token: write
     runs-on: ubuntu-slim
     needs: build
     steps:
