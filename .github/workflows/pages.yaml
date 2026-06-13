@@ -32,7 +32,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Build
-        run: make all
+        run: make -j 4 all
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Upload artifact
