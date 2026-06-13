@@ -7,7 +7,6 @@ LIMIT ?= 100
 all: dist/atom.xml
 
 issues.json: query.graphql
-	mkdir -p src
 	gh api graphql -f query="$$(cat $<)" -F limit=$(LIMIT) > $@
 
 dist/atom.xml: issues.json
