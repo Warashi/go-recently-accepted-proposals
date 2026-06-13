@@ -4,12 +4,15 @@
 # --- リポジトリ設定 ---
 OWNER ?= golang
 REPO ?= go
-LIMIT ?= 1
+LIMIT ?= 100
 
-.PHONY: all timelines timelines-real
+.PHONY: all timelines timelines-real clean
 
 # デフォルトターゲット
-all: timelines
+all: dist/atom.xml
+
+clean:
+	rm -rf build dist
 
 # 既存のIssue番号一覧取得ルール
 build/issues.txt: query.graphql
@@ -33,3 +36,8 @@ build/timeline/%.json: timeline.graphql
 	@mkdir -p build/timeline
 	@echo "Fetching timeline for issue #$*..."
 	gh api graphql --paginate -f query="$$(cat $<)" -F owner=$(OWNER) -F name=$(REPO) -F number=$* > $@
+
+dist/atom.xml: timelines
+	@mkdir -p dist
+	@echo "Generating Atom feed at $@..."
+	go run . > $@

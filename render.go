@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/feeds"
 )
 
-func renderATOM(dst io.Writer, queryResult QueryResult) error {
+func renderATOM(dst io.Writer, queryResult []QueryResult) error {
 	f := &feeds.Feed{
 		Title:       "Go's Recently Accepted Proposals",
 		Link:        &feeds.Link{Href: "https://github.com/golang/go/issues?q=is%3Aissue%20state%3Aopen%20label%3AProposal-Accepted"},
@@ -16,12 +16,13 @@ func renderATOM(dst io.Writer, queryResult QueryResult) error {
 		Created:     time.Now(),
 	}
 
-	for _, edge := range queryResult.Data.Repository.Issues.Edges {
+	for _, r := range queryResult {
+		issue := r.Data.Repository.Issue
 		f.Items = append(f.Items, &feeds.Item{
-			Title:       edge.Node.Title + " #" + strconv.Itoa(edge.Node.Number),
-			Link:        &feeds.Link{Href: edge.Node.URL},
-			Description: edge.Node.BodyText,
-			Created:     edge.acceptedAt(),
+			Title:       issue.Title + " #" + strconv.Itoa(issue.Number),
+			Link:        &feeds.Link{Href: issue.URL},
+			Description: issue.BodyText,
+			Created:     issue.acceptedAt(),
 		})
 	}
 

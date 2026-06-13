@@ -19,35 +19,35 @@ func parseQueryResult(r io.Reader) (QueryResult, error) {
 type QueryResult struct {
 	Data struct {
 		Repository struct {
-			Issues struct {
-				Edges []Edge `json:"edges"`
-			} `json:"issues"`
+			Issue Issue `json:"issue"`
 		} `json:"repository"`
 	} `json:"data"`
 }
 
-type Edge struct {
-	Node struct {
-		Title         string `json:"title"`
-		URL           string `json:"url"`
-		Number        int    `json:"number"`
-		BodyText      string `json:"bodyText"`
-		TimelineItems struct {
-			Edges []struct {
-				Node struct {
-					Typename  string    `json:"__typename"`
-					CreatedAt time.Time `json:"createdAt"`
-					Label     struct {
-						Name string `json:"name"`
-					} `json:"label"`
-				} `json:"node"`
-			} `json:"edges"`
-		} `json:"timelineItems"`
-	} `json:"node"`
+func (q QueryResult) acceptedAt() time.Time {
+	return q.Data.Repository.Issue.acceptedAt()
 }
 
-func (i Edge) acceptedAt() time.Time {
-	for _, edge := range i.Node.TimelineItems.Edges {
+type Issue struct {
+	Title         string `json:"title"`
+	URL           string `json:"url"`
+	Number        int    `json:"number"`
+	BodyText      string `json:"bodyText"`
+	TimelineItems struct {
+		Edges []struct {
+			Node struct {
+				Typename  string    `json:"__typename"`
+				CreatedAt time.Time `json:"createdAt"`
+				Label     struct {
+					Name string `json:"name"`
+				} `json:"label"`
+			} `json:"node"`
+		} `json:"edges"`
+	} `json:"timelineItems"`
+}
+
+func (i Issue) acceptedAt() time.Time {
+	for _, edge := range i.TimelineItems.Edges {
 		if edge.Node.Typename != "LabeledEvent" {
 			continue
 		}
