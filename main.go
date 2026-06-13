@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"sort"
+	"slices"
 )
 
 func main() {
@@ -12,9 +12,9 @@ func main() {
 		log.Fatalf("Failed to parse query result: %v", err)
 	}
 
-	// Sort the proposals by the date they were accepted
-	sort.SliceStable(queryResult.Data.Repository.Issues.Edges, func(i, j int) bool {
-		return queryResult.acceptedAt(i).After(queryResult.acceptedAt(j))
+	// Sort desc the proposals by the date they were accepted
+	slices.SortStableFunc(queryResult.Data.Repository.Issues.Edges, func(a, b Edge) int {
+		return a.acceptedAt().Compare(b.acceptedAt())
 	})
 
 	// Only show the first 10 proposals
